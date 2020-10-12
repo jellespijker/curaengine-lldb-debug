@@ -15,7 +15,7 @@ def __lldb_init_module(debugger, internal_dict):
     for sv in simpleValues:
         debugger.HandleCommand("type summary add -F {}.getSimpleValueSummary cura::{}".format(__name__, sv))
 
-    debugger.HandleCommand("type summary add -F " + __name__ + ".PointSummary cura::Point3")
+    debugger.HandleCommand("type summary add -F " + __name__ + ".PointSummary cura::Point")
     debugger.HandleCommand("type summary add -F " + __name__ + ".ClipperLibIntPointSummary cura::Point")
     debugger.HandleCommand("type summary add -F " + __name__ + ".AABB3DSummary cura::AABB3D")
     debugger.HandleCommand("type summary add -F " + __name__ + ".ExtruderTrainSummary cura::ExtruderTrain")
@@ -34,7 +34,7 @@ def getAxisValues(value, axes='xyz'):
 
 
 def PointSummary(value, internal_dict):
-    return "<{} = [x: {x}, y: {y}, z: {z}]>".format(value.GetDisplayTypeName(), **getAxisValues(value))
+    return "<{} = [x: {}, y: {}]>".format(value.GetDisplayTypeName(), value.GetChildMemberWithName("X").GetValueAsSigned(), value.GetChildMemberWithName("X").GetValueAsSigned())
 
 
 def AABB3DSummary(value, internal_dict):
@@ -58,4 +58,23 @@ def ExtruderTrainSummary(value, internal_dict):
 def LayerPlanSummary(value, internal_dict):
     # todo: make better
     return "<{} nr = {}>".format(value.GetDisplayTypeName(),
-                                 value.GetChildMemberWithName("extruder_nr").GetValueAsUnsigned())
+                                 value.GetChildMemberWithName("layer_nr").GetChildMemberWithName("value").GetValueAsSigned())
+
+def PolygonsSummary(value, internal_dict):
+    polygons = []
+    paths = value.GetChildMemberWithName("paths")
+    if paths is None:
+        return
+    for i in range(paths.GetNumChildren()):
+        path = paths.GetChildAtIndex(i)
+        if path is None:
+            return
+        for j in range(path.GetNumChildren()):
+            line = path.GetChildAtIndex(j)
+            if line is None:
+                return
+            polygons.append([line.GetChildMemberWithName("X").GetValueAsSigned(), line.GetChildMemberWithName("Y").GetValueAsSigned()])
+    return "np.array({})".format(polygons)
+
+def WallToolPathsSummary(value, internal_dict):
+    return "<{} = no walls: {} with a width of 0th: {}, xth: {}, strategy type: {}>".format(value.GetDisplayTypeName(), value.GetChildMemberWithName("inset_count").GetValueAsSigned(), value.GetChildMemberWithName("bead_width_0").GetValueAsSigned(), value.GetChildMemberWithName("bead_width_x").GetValueAsSigned(), value.GetChildMemberWithName("strategy_type") )

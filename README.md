@@ -29,7 +29,12 @@ command script import <path to your curaengine-lldb-debug repo>/curaengine.py
 
 # Usefull sources:
 
+online:
 - https://lldb.llvm.org/use/variable.html
 - https://lldb.llvm.org/python_reference/index.html
 - https://github.com/llvm/llvm-project/tree/master/lldb/examples
 - https://github.com/fantaosha/LLDB-Eigen-Pretty-Printer/blob/master/LLDB_Eigen_Pretty_Printer.py
+- https://github.com/qt-creator/qt-creator/tree/master/share/qtcreator/debugger
+
+local:
+ - /opt/clion/bin/lldb/renderers/lldb_formatters
