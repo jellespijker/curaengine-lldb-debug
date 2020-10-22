@@ -61,20 +61,22 @@ def LayerPlanSummary(value, internal_dict):
                                  value.GetChildMemberWithName("layer_nr").GetChildMemberWithName("value").GetValueAsSigned())
 
 def PolygonsSummary(value, internal_dict):
-    polygons = []
     paths = value.GetChildMemberWithName("paths")
+    summary = ""
     if paths is None:
         return
     for i in range(paths.GetNumChildren()):
         path = paths.GetChildAtIndex(i)
         if path is None:
             return
+        polypath = []
         for j in range(path.GetNumChildren()):
             line = path.GetChildAtIndex(j)
             if line is None:
                 return
-            polygons.append([line.GetChildMemberWithName("X").GetValueAsSigned(), line.GetChildMemberWithName("Y").GetValueAsSigned()])
-    return "np.array({})".format(polygons)
+            polypath.append([line.GetChildMemberWithName("X").GetValueAsSigned(), line.GetChildMemberWithName("Y").GetValueAsSigned()])
+        summary += "np.array({}), ".format(polypath)
+    return "[{}]".format(summary[:-2])
 
 def WallToolPathsSummary(value, internal_dict):
     return "<{} = no walls: {} with a width of 0th: {}, xth: {}, strategy type: {}>".format(value.GetDisplayTypeName(), value.GetChildMemberWithName("inset_count").GetValueAsSigned(), value.GetChildMemberWithName("bead_width_0").GetValueAsSigned(), value.GetChildMemberWithName("bead_width_x").GetValueAsSigned(), value.GetChildMemberWithName("strategy_type") )
