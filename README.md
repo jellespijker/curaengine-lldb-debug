@@ -3,7 +3,18 @@ LLDB debugging tools (such as pretty printers) for CuraEngine
 
 ![GitHub Logo](resources/prettyprint.jpg)
 
+Also easy Polygon viewing possible. If you have tool like [Klipper](https://userbase.kde.org/Klipper) it is possible to
+set actions for certain cut snippets that match a regex pattern.
+Create the following regular expression to match against `((^.+\s=)|(\s\[.+$))` and add
+an action with the output handling flag `Ignore` set, containing the following Command
+`echo %s | python <directory_containing>/debug_poly.py`
+This is currently only tested on Linux running KDE with Clion. make sure you have numpy and
+matplotlib installed.
+
+![GitHub Logo](resources/show_polygons.gif)
+
 ## Currently implemented
+ - [x] cura::Polygons
  - [x] cura::Temperature
  - [x] cura::Velocity
  - [x] cura::Acceleration
