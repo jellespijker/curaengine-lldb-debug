@@ -37,7 +37,7 @@ def pathplot(**kwargs):
             bounds_y[0] = min(v[:, 1]) if min(v[:, 0]) < bounds_y[0] else bounds_y[0]
             bounds_y[1] = max(v[:, 1]) if max(v[:, 0]) > bounds_y[1] else bounds_y[1]
             path = buildpath(v)
-            patch = patches.PathPatch(path, edgecolor=colors[c_idx], facecolor='None', alpha=2/len(kwargs), linewidth=2, label="{}_{}".format(k, idx))
+            patch = patches.PathPatch(path, edgecolor=colors[c_idx], facecolor='None', alpha=0.5, linewidth=2, label="{}_{}".format(k, idx))
             ax.add_patch(patch)
             idx += 1
             c_idx += 1
