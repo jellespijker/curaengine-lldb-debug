@@ -54,8 +54,14 @@ def pathplot(**kwargs):
 if __name__ == '__main__':
     polygons = {}
     for line in sys.stdin:
-        key, value = line.split(" = {cura::Polygons} ")
-        polygons[key] = []
+        key_values = line.split(" = {cura::Polygons} ")
+        if len(key_values) == 1:
+            value = key_values[0]
+            key = "Var"
+            polygons[key] = []
+        else:
+            key, value = key_values
+            polygons[key] = []
         parsed = ast.literal_eval(value)
         for poly in parsed:
             polygons[key].append(np.array(poly))
