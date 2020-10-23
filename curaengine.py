@@ -10,8 +10,8 @@ def __lldb_init_module(debugger, internal_dict):
                     'Velocity',
                     'Acceleration',
                     'LayerIndex',
-                    'Ratio',
-                    'AngleDegrees']
+                    'AngleDegrees',
+                    'Ratio']
     for sv in simpleValues:
         debugger.HandleCommand("type summary add -F {}.getSimpleValueSummary cura::{}".format(__name__, sv))
 
@@ -20,10 +20,12 @@ def __lldb_init_module(debugger, internal_dict):
     debugger.HandleCommand("type summary add -F " + __name__ + ".AABB3DSummary cura::AABB3D")
     debugger.HandleCommand("type summary add -F " + __name__ + ".ExtruderTrainSummary cura::ExtruderTrain")
     debugger.HandleCommand("type summary add -F " + __name__ + ".LayerPlanSummary cura::LayerPlan")
+    debugger.HandleCommand("type summary add -F " + __name__ + ".PolygonsSummary cura::Polygons")
+    debugger.HandleCommand("type summary add -F " + __name__ + ".WallToolPathsSummary cura::WallToolPaths")
 
 
 def getSimpleValueSummary(value, internal_dict):
-    return "<{} = {}>".format(value.GetDisplayTypeName(), value.GetChildMemberWithName("value").GetValueAsSigned())
+    return "<{} = {}>".format(value.GetDisplayTypeName(), value.GetChildMemberWithName("value").GetValue())
 
 
 def getAxisValues(value, axes='xyz'):
@@ -75,7 +77,7 @@ def PolygonsSummary(value, internal_dict):
             if line is None:
                 return
             polypath.append([line.GetChildMemberWithName("X").GetValueAsSigned(), line.GetChildMemberWithName("Y").GetValueAsSigned()])
-        summary += "np.array({}), ".format(polypath)
+        summary += "{}, ".format(polypath)
     return "[{}]".format(summary[:-2])
 
 def WallToolPathsSummary(value, internal_dict):
