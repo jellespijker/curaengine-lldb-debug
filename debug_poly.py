@@ -1,4 +1,5 @@
 import sys
+import ast
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.path import Path
@@ -51,8 +52,12 @@ def pathplot(**kwargs):
     plt.show()
 
 if __name__ == '__main__':
-    pathplot(base =  [np.array([[122544, 109050], [110546, 109050], [110546, 105950], [122544, 105950]])],
-dense_base =  [np.array([[122544, 109050], [120010, 109050], [120010, 105950], [122544, 105950]]), np.array([[110546, 109050], [110546, 105950], [113079, 105950], [113079, 109050]])],
-cut_dense_base =  [np.array([[113079, 108630], [110966, 108630], [110966, 106370], [113079, 106370]]), np.array([[122124, 108630], [120010, 108630], [120010, 106370], [122124, 106370]])],
-cut_base =  [np.array([[113079, 109050], [110546, 109050], [110546, 105950], [113079, 105950]]), np.array([[122544, 109050], [120010, 109050], [120010, 105950], [122544, 105950]])],
-cut =  [np.array([[113079, 106370], [110966, 106370], [110966, 108630], [113079, 108630], [113079, 109050], [110546, 109050], [110546, 105950], [113079, 105950]]), np.array([[122544, 105950], [122544, 109050], [120010, 109050], [120010, 108630], [122124, 108630], [122124, 106370], [120010, 106370], [120010, 105950]])])
+    polygons = {}
+    for line in sys.stdin:
+        key, value = line.split(" = {cura::Polygons} ")
+        polygons[key] = []
+        parsed = ast.literal_eval(value)
+        for poly in parsed:
+            polygons[key].append(np.array(poly))
+    print(polygons)
+    pathplot(**polygons)
